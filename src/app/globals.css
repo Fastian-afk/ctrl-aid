@@ -1,26 +1,280 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-navy-950: #0a0e1a;
+  --color-navy-900: #0f1629;
+  --color-navy-800: #1a2342;
+  --color-navy-700: #243056;
+  --color-navy-600: #2e3d6b;
+  --color-teal-500: #14b8a6;
+  --color-teal-400: #2dd4bf;
+  --color-cyan-400: #22d3ee;
+  --color-cyan-300: #67e8f9;
+  --color-cyan-200: #a5f3fc;
+
+  --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #0a0e1a;
+  --foreground: #f8fafc;
 }
 
+/* ─── Base ─── */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter, "Inter", system-ui, sans-serif);
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #243056;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2e3d6b;
+}
+
+/* ─── Animations ─── */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes radar-ping {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 300% 300%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.animate-radar {
+  animation: radar-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ─── Glass Card ─── */
+.glass-card {
+  background: rgba(15, 22, 41, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(34, 211, 238, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(34, 211, 238, 0.2);
+  box-shadow: 0 0 30px rgba(34, 211, 238, 0.05);
+}
+
+/* ─── Glow Effects ─── */
+.glow-teal {
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.15), 0 0 60px rgba(20, 184, 166, 0.05);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.15), 0 0 60px rgba(34, 211, 238, 0.05);
+}
+
+.glow-border {
+  position: relative;
+}
+
+.glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.3), transparent, rgba(20, 184, 166, 0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ─── Hero Mesh Background ─── */
+.hero-mesh {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(20, 184, 166, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+    #0a0e1a;
+}
+
+/* ─── Grid Pattern ─── */
+.grid-pattern {
+  background-image: 
+    linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ─── Text Gradient ─── */
+.text-gradient {
+  background: linear-gradient(135deg, #22d3ee, #14b8a6, #67e8f9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Sidebar ─── */
+.sidebar-item {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.sidebar-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: linear-gradient(180deg, #14b8a6, #22d3ee);
+  border-radius: 0 4px 4px 0;
+}
+
+/* ─── Chat Bubbles ─── */
+.chat-bubble-user {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(34, 211, 238, 0.15));
+  border: 1px solid rgba(20, 184, 166, 0.2);
+}
+
+.chat-bubble-ai {
+  background: rgba(15, 22, 41, 0.8);
+  border: 1px solid rgba(34, 211, 238, 0.1);
+}
+
+/* ─── Map ─── */
+.leaflet-container {
+  background: #0a0e1a !important;
+  border-radius: 12px;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(15, 22, 41, 0.95) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(34, 211, 238, 0.15) !important;
+  color: #f8fafc !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-popup-content {
+  color: #f8fafc !important;
+  margin: 12px 16px !important;
+  font-family: var(--font-inter, "Inter", system-ui, sans-serif) !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(15, 22, 41, 0.95) !important;
+  border: 1px solid rgba(34, 211, 238, 0.15) !important;
+}
+
+.leaflet-control-zoom a {
+  background: rgba(15, 22, 41, 0.9) !important;
+  color: #f8fafc !important;
+  border-color: rgba(34, 211, 238, 0.15) !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: rgba(26, 35, 66, 0.95) !important;
+}
+
+/* ─── Button Base ─── */
+.btn-primary {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  color: white;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(20, 184, 166, 0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #f8fafc;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 12px;
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(34, 211, 238, 0.5);
+  background: rgba(34, 211, 238, 0.05);
+  transform: translateY(-2px);
+}
+
+/* ─── Markdown in chat ─── */
+.chat-content p {
+  margin-bottom: 0.5em;
+}
+.chat-content ul,
+.chat-content ol {
+  padding-left: 1.5em;
+  margin-bottom: 0.5em;
+}
+.chat-content li {
+  margin-bottom: 0.25em;
+}
+.chat-content strong {
+  color: #2dd4bf;
 }
