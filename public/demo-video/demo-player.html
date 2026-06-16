@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ctrl+Aid — Demo Video Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a1628;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* TITLE SLIDE */
+        .title-slide {
+            flex-direction: column;
+            gap: 24px;
+            background: radial-gradient(ellipse at center, #0f2647 0%, #0a1628 70%);
+            text-align: center;
+            padding: 60px;
+        }
+
+        .title-slide .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 100px;
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            background: rgba(45, 212, 191, 0.05);
+            font-size: 14px;
+            color: #5eead4;
+            font-weight: 500;
+        }
+
+        .title-slide .badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2dd4bf;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        .title-slide h1 {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -2px;
+        }
+
+        .title-slide h1 .gradient {
+            background: linear-gradient(135deg, #2dd4bf 0%, #22d3ee 50%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .title-slide .subtitle {
+            font-size: 22px;
+            color: #94a3b8;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .title-slide .tech-badges {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .title-slide .tech-badge {
+            padding: 6px 14px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .title-slide .hackathon {
+            font-size: 14px;
+            color: #475569;
+            margin-top: 24px;
+        }
+
+        .title-slide .hackathon span {
+            color: #2dd4bf;
+        }
+
+        /* RECORDING SLIDE */
+        .recording-slide {
+            flex-direction: column;
+            background: #0a1628;
+        }
+
+        .recording-slide .section-label {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            border-radius: 12px;
+            background: rgba(10, 22, 40, 0.9);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            backdrop-filter: blur(20px);
+        }
+
+        .recording-slide .section-label .icon {
+            font-size: 18px;
+        }
+
+        .recording-slide .section-label .text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .recording-slide .section-label .sub {
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .recording-slide img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        /* TEXT SLIDES */
+        .text-slide {
+            flex-direction: column;
+            gap: 40px;
+            padding: 80px;
+            background: radial-gradient(ellipse at center, #0f2647 0%, #0a1628 70%);
+        }
+
+        .text-slide .section-tag {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2dd4bf;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .text-slide h2 {
+            font-size: 52px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .text-slide h2 .gradient {
+            background: linear-gradient(135deg, #2dd4bf 0%, #22d3ee 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-slide .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .text-slide .feature-card {
+            padding: 24px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .text-slide .feature-card .icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .text-slide .feature-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .text-slide .feature-card p {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .text-slide .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .text-slide .tech-item {
+            text-align: center;
+            padding: 20px 16px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .text-slide .tech-item .name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .text-slide .tech-item .desc {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* END SLIDE */
+        .end-slide {
+            flex-direction: column;
+            gap: 32px;
+            text-align: center;
+            background: radial-gradient(ellipse at center, #0f2647 0%, #0a1628 70%);
+        }
+
+        .end-slide h2 {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .end-slide .links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 16px;
+            color: #94a3b8;
+        }
+
+        .end-slide .links a {
+            color: #2dd4bf;
+            text-decoration: none;
+        }
+
+        /* CONTROLS */
+        .controls {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 24px;
+            border-radius: 16px;
+            background: rgba(10, 22, 40, 0.85);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .controls button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .controls button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .controls .indicator {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 500;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #2dd4bf, #22d3ee);
+            transition: width 0.5s ease;
+            z-index: 100;
+        }
+
+        /* Floating orbs decoration */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+        }
+        .orb-1 { width: 300px; height: 300px; background: rgba(45,212,191,0.08); top: 20%; left: 10%; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(34,211,238,0.06); bottom: 20%; right: 10%; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- Slide 1: Title -->
+    <div class="slide title-slide active" data-slide="0">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="badge">
+            <div class="dot"></div>
+            AI for Civic Innovation Hackathon 2026
+        </div>
+        <h1>
+            <span class="gradient">Ctrl+Aid</span>
+        </h1>
+        <p class="subtitle">
+            AI-Powered Emergency Information Platform for Pakistani Communities Facing Natural Disasters
+        </p>
+        <div class="tech-badges">
+            <span class="tech-badge">Next.js 16</span>
+            <span class="tech-badge">TypeScript</span>
+            <span class="tech-badge">Google Gemini 2.0 Flash</span>
+            <span class="tech-badge">Tailwind CSS v4</span>
+            <span class="tech-badge">React-Leaflet</span>
+            <span class="tech-badge">Vercel AI SDK v5</span>
+            <span class="tech-badge">Framer Motion</span>
+        </div>
+        <p class="hackathon">Built by Team <span>Ctrl+Aid</span> · Code for Pakistan</p>
+    </div>
+
+    <!-- Slide 2: Problem Statement -->
+    <div class="slide text-slide" data-slide="1">
+        <div class="orb orb-1"></div>
+        <span class="section-tag">The Problem</span>
+        <h2>During Pakistan's 2022 floods, <span class="gradient">33 million people</span> were displaced</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon">📡</div>
+                <h3>Fragmented Information</h3>
+                <p>No single source of verified emergency alerts during disaster events</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🗺️</div>
+                <h3>Inaccessible Shelter Data</h3>
+                <p>People couldn't locate nearby shelters or hospitals during emergencies</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📞</div>
+                <h3>Scattered Contacts</h3>
+                <p>Critical helplines buried across different government websites</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🤖</div>
+                <h3>No AI Guidance</h3>
+                <p>No way to ask questions and get personalized safety advice instantly</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Solution -->
+    <div class="slide text-slide" data-slide="2">
+        <div class="orb orb-1"></div>
+        <span class="section-tag">Our Solution</span>
+        <h2><span class="gradient">Ctrl+Aid</span> — Everything You Need in an Emergency</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon">🔴</div>
+                <h3>Live Emergency Updates</h3>
+                <p>Real-time verified alerts from NDMA, PDMA, PMD, Rescue 1122 with severity filtering</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🗺️</div>
+                <h3>Interactive Shelter Map</h3>
+                <p>12+ locations across 4 cities with capacity, phone, and status info</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📞</div>
+                <h3>Emergency Contacts</h3>
+                <p>Searchable directory with one-tap calling — Rescue 1122, Edhi 115, Police 15, Fire 16</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🤖</div>
+                <h3>AI Emergency Assistant</h3>
+                <p>Gemini-powered streaming AI with verified shelter data and safety guidance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Demo - Landing Page -->
+    <div class="slide recording-slide" data-slide="3">
+        <div class="section-label">
+            <span class="icon">🏠</span>
+            <div>
+                <div class="text">Landing Page</div>
+                <div class="sub">Premium dark-themed hero with animated gradient mesh</div>
+            </div>
+        </div>
+        <img src="landing_page_demo.webp" alt="Landing Page Demo">
+    </div>
+
+    <!-- Slide 5: Demo - Alerts Dashboard -->
+    <div class="slide recording-slide" data-slide="4">
+        <div class="section-label">
+            <span class="icon">📡</span>
+            <div>
+                <div class="text">Live Emergency Updates & Shelter Map</div>
+                <div class="sub">Real-time alerts with category filtering + Interactive Leaflet map</div>
+            </div>
+        </div>
+        <img src="dashboard_alerts_demo.webp" alt="Dashboard Alerts Demo">
+    </div>
+
+    <!-- Slide 6: Demo - Contacts & AI -->
+    <div class="slide recording-slide" data-slide="5">
+        <div class="section-label">
+            <span class="icon">🤖</span>
+            <div>
+                <div class="text">Emergency Contacts & AI Assistant</div>
+                <div class="sub">Searchable contacts + Streaming Gemini AI chat</div>
+            </div>
+        </div>
+        <img src="contacts_ai_demo.webp" alt="Contacts and AI Demo">
+    </div>
+
+    <!-- Slide 7: Tech Stack -->
+    <div class="slide text-slide" data-slide="6">
+        <div class="orb orb-1"></div>
+        <span class="section-tag">Technology Stack</span>
+        <h2>Built with <span class="gradient">Modern Tools</span></h2>
+        <div class="tech-stack">
+            <div class="tech-item">
+                <div class="name">Next.js 16</div>
+                <div class="desc">App Router + SSR</div>
+            </div>
+            <div class="tech-item">
+                <div class="name">TypeScript</div>
+                <div class="desc">Type-safe</div>
+            </div>
+            <div class="tech-item">
+                <div class="name">Gemini 2.0</div>
+                <div class="desc">AI Assistant</div>
+            </div>
+            <div class="tech-item">
+                <div class="name">Vercel AI SDK</div>
+                <div class="desc">Streaming Chat</div>
+            </div>
+            <div class="tech-item">
+                <div class="name">Tailwind v4</div>
+                <div class="desc">Dark Theme</div>
+            </div>
+            <div class="tech-item">
+                <div class="name">Framer Motion</div>
+                <div class="desc">Animations</div>
+            </div>
+            <div class="tech-item">
+                <div class="name">React-Leaflet</div>
+                <div class="desc">Maps</div>
+            </div>
+            <div class="tech-item">
+                <div class="name">Vercel</div>
+                <div class="desc">Deployment</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Impact & What's Next -->
+    <div class="slide text-slide" data-slide="7">
+        <div class="orb orb-1"></div>
+        <span class="section-tag">Impact & Future</span>
+        <h2>Designed for <span class="gradient">Real Impact</span></h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon">🌐</div>
+                <h3>Multi-Language Support</h3>
+                <p>Urdu, Sindhi, Pashto for broader accessibility across all provinces</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📱</div>
+                <h3>Offline-First PWA</h3>
+                <p>Cached shelter data and emergency guides — works without internet</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">💬</div>
+                <h3>SMS Fallback</h3>
+                <p>Emergency info via SMS for users without internet access</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📊</div>
+                <h3>Real-time API Integration</h3>
+                <p>Live feeds from NDMA, PDMA, and Pakistan Meteorological Department</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: End -->
+    <div class="slide end-slide" data-slide="8">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="badge" style="display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:100px;border:1px solid rgba(45,212,191,0.2);background:rgba(45,212,191,0.05);font-size:14px;color:#5eead4;font-weight:500;">
+            <div class="dot" style="width:8px;height:8px;border-radius:50%;background:#2dd4bf;animation:pulse-dot 2s infinite;"></div>
+            Thank You
+        </div>
+        <h2 style="font-size:56px;font-weight:800;">
+            <span style="background:linear-gradient(135deg,#2dd4bf,#22d3ee,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Ctrl+Aid</span>
+        </h2>
+        <p style="font-size:20px;color:#94a3b8;max-width:500px;line-height:1.6;">
+            Because access to information saves lives.
+        </p>
+        <div class="links">
+            <span>🔗 Live Demo: <a href="https://ctrl-aid.vercel.app">ctrl-aid.vercel.app</a></span>
+            <span>📂 GitHub: <a href="https://github.com/Fastian-afk/ctrl-aid">github.com/Fastian-afk/ctrl-aid</a></span>
+        </div>
+        <p style="font-size:13px;color:#475569;margin-top:16px;">
+            AI for Civic Innovation Hackathon 2026 · Code for Pakistan
+        </p>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button onclick="prevSlide()">◀ Prev</button>
+        <span class="indicator" id="slideIndicator">1 / 9</span>
+        <button onclick="nextSlide()">Next ▶</button>
+        <button onclick="toggleAuto()" id="autoBtn" style="margin-left:8px;font-size:13px;">▶ Auto Play</button>
+    </div>
+
+    <script>
+        let current = 0;
+        const slides = document.querySelectorAll('.slide');
+        const total = slides.length;
+        let autoPlay = null;
+
+        function showSlide(n) {
+            current = ((n % total) + total) % total;
+            slides.forEach(s => s.classList.remove('active'));
+            slides[current].classList.add('active');
+            document.getElementById('slideIndicator').textContent = `${current + 1} / ${total}`;
+            document.getElementById('progressBar').style.width = `${((current + 1) / total) * 100}%`;
+        }
+
+        function nextSlide() { showSlide(current + 1); }
+        function prevSlide() { showSlide(current - 1); }
+
+        function toggleAuto() {
+            const btn = document.getElementById('autoBtn');
+            if (autoPlay) {
+                clearInterval(autoPlay);
+                autoPlay = null;
+                btn.textContent = '▶ Auto Play';
+            } else {
+                autoPlay = setInterval(nextSlide, 6000);
+                btn.textContent = '⏸ Pause';
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+</html>

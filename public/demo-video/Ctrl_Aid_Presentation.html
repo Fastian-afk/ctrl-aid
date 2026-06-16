@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280,height=720">
+<title>Ctrl+Aid — Google Slides Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#000;overflow:hidden}
+.deck{width:1280px;height:720px;margin:0 auto;position:relative;overflow:hidden}
+.s{position:absolute;inset:0;display:none;padding:80px;background:#0a1628}
+.s.active{display:flex}
+.s.col{flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:24px}
+.s.left{flex-direction:column;justify-content:center;gap:28px}
+.grad{background:linear-gradient(135deg,#2dd4bf,#22d3ee,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:99px;border:1px solid rgba(45,212,191,.2);background:rgba(45,212,191,.05);font-size:13px;color:#5eead4;font-weight:500}
+.badge .dot{width:8px;height:8px;border-radius:50%;background:#2dd4bf}
+.tag{font-size:12px;font-weight:700;color:#2dd4bf;text-transform:uppercase;letter-spacing:3px}
+h1{font-size:64px;font-weight:800;line-height:1.1;letter-spacing:-2px;color:#fff}
+h2{font-size:44px;font-weight:800;line-height:1.15;letter-spacing:-1.5px;color:#fff}
+h3{font-size:18px;font-weight:700;color:#fff;margin-bottom:6px}
+.sub{font-size:18px;color:#94a3b8;line-height:1.6;max-width:700px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:900px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;width:100%;max-width:900px}
+.card{padding:24px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);text-align:left}
+.card .ico{font-size:28px;margin-bottom:12px}
+.card p{font-size:13px;color:#64748b;line-height:1.5}
+.titem{text-align:center;padding:18px 12px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+.titem .nm{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
+.titem .ds{font-size:11px;color:#64748b}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.o1{width:300px;height:300px;background:rgba(45,212,191,.08);top:15%;left:5%}
+.o2{width:350px;height:350px;background:rgba(34,211,238,.06);bottom:10%;right:5%}
+.tb{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.tb span{padding:6px 14px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:12px;color:#64748b;font-weight:500}
+.links{font-size:15px;color:#94a3b8;line-height:2}
+.links a{color:#2dd4bf;text-decoration:none}
+.nav{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:12px;align-items:center;padding:10px 24px;border-radius:14px;background:rgba(10,22,40,.85);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(20px);z-index:99}
+.nav button{background:none;border:none;color:#fff;cursor:pointer;font-size:14px;padding:6px 12px;border-radius:8px}
+.nav button:hover{background:rgba(255,255,255,.1)}
+.nav .ind{font-size:12px;color:#64748b;min-width:50px;text-align:center}
+.pg{position:absolute;top:0;left:0;height:3px;background:linear-gradient(90deg,#2dd4bf,#22d3ee);z-index:99;transition:width .4s}
+.screenshot{max-width:90%;max-height:75%;border-radius:12px;border:1px solid rgba(255,255,255,.08);box-shadow:0 25px 50px -12px rgba(0,0,0,.5);margin:0 auto}
+.slabel{position:absolute;top:24px;left:50%;transform:translateX(-50%);z-index:10;display:flex;align-items:center;gap:10px;padding:10px 24px;border-radius:12px;background:rgba(10,22,40,.9);border:1px solid rgba(45,212,191,.2);backdrop-filter:blur(20px)}
+.slabel .st{font-size:14px;font-weight:600;color:#e2e8f0}
+.slabel .ss{font-size:11px;color:#64748b}
+@media print{.nav,.pg{display:none}.s{display:flex!important;page-break-after:always;position:relative;width:1280px;height:720px}}
+</style>
+</head>
+<body>
+<div class="deck">
+<div class="pg" id="pb"></div>
+
+<!-- SLIDE 1: Title -->
+<div class="s col active" data-n="0">
+<div class="orb o1"></div><div class="orb o2"></div>
+<div class="badge"><div class="dot"></div>AI for Civic Innovation Hackathon 2026</div>
+<h1><span class="grad">Ctrl+Aid</span></h1>
+<p class="sub">AI-Powered Emergency Information Platform for Pakistani Communities Facing Natural Disasters</p>
+<div class="tb">
+<span>Next.js 16</span><span>TypeScript</span><span>Google Gemini 2.0 Flash</span><span>Tailwind CSS v4</span><span>React-Leaflet</span><span>Vercel AI SDK v5</span><span>Framer Motion</span>
+</div>
+<p style="font-size:13px;color:#475569;margin-top:16px">Built by Team <span style="color:#2dd4bf">Ctrl+Aid</span> · Code for Pakistan</p>
+</div>
+
+<!-- SLIDE 2: Problem -->
+<div class="s col" data-n="1">
+<div class="orb o1"></div>
+<span class="tag">The Problem</span>
+<h2>During Pakistan's 2022 floods, <span class="grad">33 million people</span> were displaced</h2>
+<div class="grid2">
+<div class="card"><div class="ico">📡</div><h3>Fragmented Information</h3><p>No single source of verified emergency alerts during disasters</p></div>
+<div class="card"><div class="ico">🗺️</div><h3>Inaccessible Shelter Data</h3><p>People couldn't locate nearby shelters or hospitals</p></div>
+<div class="card"><div class="ico">📞</div><h3>Scattered Contacts</h3><p>Critical helplines buried across different websites</p></div>
+<div class="card"><div class="ico">🤖</div><h3>No AI Guidance</h3><p>No way to get personalized safety advice instantly</p></div>
+</div>
+</div>
+
+<!-- SLIDE 3: Solution -->
+<div class="s col" data-n="2">
+<div class="orb o1"></div>
+<span class="tag">Our Solution</span>
+<h2><span class="grad">Ctrl+Aid</span> — Everything You Need in an Emergency</h2>
+<div class="grid2">
+<div class="card"><div class="ico">🔴</div><h3>Live Emergency Updates</h3><p>Real-time verified alerts from NDMA, PDMA, PMD, Rescue 1122 with severity filtering</p></div>
+<div class="card"><div class="ico">🗺️</div><h3>Interactive Shelter Map</h3><p>12+ locations across 4 cities with capacity, phone, and status info</p></div>
+<div class="card"><div class="ico">📞</div><h3>Emergency Contacts</h3><p>Searchable directory with one-tap calling — Rescue 1122, Edhi 115, Police, Fire</p></div>
+<div class="card"><div class="ico">🤖</div><h3>AI Emergency Assistant</h3><p>Gemini-powered streaming chat with verified shelter data and safety guidance</p></div>
+</div>
+</div>
+
+<!-- SLIDE 4: Demo - Landing -->
+<div class="s col" data-n="3" style="padding:40px">
+<div class="slabel"><span style="font-size:18px">🏠</span><div><div class="st">Landing Page</div><div class="ss">Premium dark-themed hero with animated gradients</div></div></div>
+<img class="screenshot" src="landing_page_demo.webp" alt="Landing Page">
+</div>
+
+<!-- SLIDE 5: Demo - Dashboard -->
+<div class="s col" data-n="4" style="padding:40px">
+<div class="slabel"><span style="font-size:18px">📡</span><div><div class="st">Live Emergency Updates & Shelter Map</div><div class="ss">Real-time alerts + Interactive Leaflet map with 12+ locations</div></div></div>
+<img class="screenshot" src="dashboard_alerts_demo.webp" alt="Dashboard">
+</div>
+
+<!-- SLIDE 6: Demo - Contacts & AI -->
+<div class="s col" data-n="5" style="padding:40px">
+<div class="slabel"><span style="font-size:18px">🤖</span><div><div class="st">Emergency Contacts & AI Assistant</div><div class="ss">Searchable contacts + Streaming Gemini AI chat</div></div></div>
+<img class="screenshot" src="contacts_ai_demo.webp" alt="Contacts & AI">
+</div>
+
+<!-- SLIDE 7: Tech Stack -->
+<div class="s col" data-n="6">
+<div class="orb o1"></div>
+<span class="tag">Technology Stack</span>
+<h2>Built with <span class="grad">Modern Tools</span></h2>
+<div class="grid4">
+<div class="titem"><div class="nm">Next.js 16</div><div class="ds">App Router + SSR</div></div>
+<div class="titem"><div class="nm">TypeScript</div><div class="ds">Type-safe codebase</div></div>
+<div class="titem"><div class="nm">Gemini 2.0 Flash</div><div class="ds">AI Assistant</div></div>
+<div class="titem"><div class="nm">Vercel AI SDK v5</div><div class="ds">Streaming Chat</div></div>
+<div class="titem"><div class="nm">Tailwind CSS v4</div><div class="ds">Dark Theme System</div></div>
+<div class="titem"><div class="nm">Framer Motion</div><div class="ds">Micro-animations</div></div>
+<div class="titem"><div class="nm">React-Leaflet</div><div class="ds">Interactive Maps</div></div>
+<div class="titem"><div class="nm">Vercel</div><div class="ds">Edge Deployment</div></div>
+</div>
+<p style="font-size:13px;color:#475569;margin-top:12px">Data sourced from NDMA · PDMA · PMD · Rescue 1122</p>
+</div>
+
+<!-- SLIDE 8: Impact -->
+<div class="s col" data-n="7">
+<div class="orb o1"></div>
+<span class="tag">Impact & What's Next</span>
+<h2>Designed for <span class="grad">Real Impact</span></h2>
+<div class="grid2">
+<div class="card"><div class="ico">🌐</div><h3>Multi-Language Support</h3><p>Urdu, Sindhi, Pashto for broader accessibility across all provinces</p></div>
+<div class="card"><div class="ico">📱</div><h3>Offline-First PWA</h3><p>Cached shelter data and emergency guides — works without internet</p></div>
+<div class="card"><div class="ico">💬</div><h3>SMS Fallback</h3><p>Emergency info via SMS for users without internet access</p></div>
+<div class="card"><div class="ico">📊</div><h3>Real-time API Integration</h3><p>Live feeds from NDMA, PDMA, and Pakistan Meteorological Department</p></div>
+</div>
+</div>
+
+<!-- SLIDE 9: Thank You -->
+<div class="s col" data-n="8">
+<div class="orb o1"></div><div class="orb o2"></div>
+<div class="badge"><div class="dot"></div>Thank You</div>
+<h1><span class="grad">Ctrl+Aid</span></h1>
+<p class="sub">Because access to information saves lives.</p>
+<div class="links">
+🔗 Live Demo: <a href="https://ctrl-aid.vercel.app">ctrl-aid.vercel.app</a><br>
+📂 GitHub: <a href="https://github.com/Fastian-afk/ctrl-aid">github.com/Fastian-afk/ctrl-aid</a>
+</div>
+<p style="font-size:12px;color:#475569;margin-top:20px">AI for Civic Innovation Hackathon 2026 · Code for Pakistan</p>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+<button onclick="go(-1)">◀ Prev</button>
+<span class="ind" id="ind">1/9</span>
+<button onclick="go(1)">Next ▶</button>
+</div>
+</div>
+
+<script>
+let c=0;const ss=document.querySelectorAll('.s'),t=ss.length;
+function show(n){c=((n%t)+t)%t;ss.forEach(s=>s.classList.remove('active'));ss[c].classList.add('active');document.getElementById('ind').textContent=`${c+1}/${t}`;document.getElementById('pb').style.width=`${((c+1)/t)*100}%`}
+function go(d){show(c+d)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1)}if(e.key==='ArrowLeft')go(-1)});
+</script>
+</body>
+</html>

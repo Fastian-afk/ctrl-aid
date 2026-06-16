@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.80",
+    "@ai-sdk/groq": "^3.0.41",
     "@ai-sdk/react": "^3.0.201",
     "ai": "^6.0.199",
     "framer-motion": "^12.40.0",
@@ -29,6 +30,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "pptxgenjs": "^4.0.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

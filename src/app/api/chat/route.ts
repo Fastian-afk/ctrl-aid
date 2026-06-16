@@ -1,7 +1,11 @@
+import { createGroq } from "@ai-sdk/groq";
 import { google } from "@ai-sdk/google";
 import { streamText, convertToModelMessages } from "ai";
 
 export const maxDuration = 30;
+
+// Groq — free, no credit card, sub-second responses
+const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
 
 const SYSTEM_PROMPT = `You are Ctrl+Aid, an AI emergency assistant for Pakistan. You provide:
 - Verified emergency information
@@ -48,13 +52,23 @@ export async function POST(req: Request) {
     // Convert UIMessages (parts format) to ModelMessages (content format)
     const modelMessages = await convertToModelMessages(uiMessages);
 
-    const result = streamText({
-      model: google("gemini-2.0-flash"),
-      system: SYSTEM_PROMPT,
-      messages: modelMessages,
-    });
-
-    return result.toTextStreamResponse();
+    // Try Groq first (free + ultra-fast), fallback to Google Gemini
+    try {
+      const result = streamText({
+        model: groq("llama-3.3-70b-versatile"),
+        system: SYSTEM_PROMPT,
+        messages: modelMessages,
+      });
+      return result.toTextStreamResponse();
+    } catch {
+      // Fallback to Google Gemini if Groq fails
+      const result = streamText({
+        model: google("gemini-2.0-flash"),
+        system: SYSTEM_PROMPT,
+        messages: modelMessages,
+      });
+      return result.toTextStreamResponse();
+    }
   } catch (error: unknown) {
     console.error("Chat API error:", error);
     return new Response(

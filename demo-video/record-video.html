@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ctrl+Aid — Demo Video Recorder</title>
+<style>
+body{margin:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:Arial}
+canvas{display:none}
+.container{position:relative;width:1280px;height:720px;overflow:hidden;background:#0a1628;border-radius:8px}
+.webp-player{position:absolute;inset:0;display:none;width:100%;height:100%;object-fit:contain;background:#0a1628}
+.webp-player.active{display:block}
+.controls{margin-top:20px;display:flex;gap:16px;align-items:center}
+button{padding:12px 28px;border-radius:10px;border:none;font-size:16px;cursor:pointer;font-weight:600}
+.record-btn{background:#ef4444;color:#fff}
+.record-btn.recording{background:#22c55e}
+.download-btn{background:#2dd4bf;color:#0a1628}
+.status{color:#94a3b8;font-size:14px;margin-top:12px}
+h2{color:#fff;margin-bottom:16px;font-size:18px}
+.instructions{color:#94a3b8;font-size:13px;max-width:700px;text-align:center;line-height:1.8;margin-top:16px}
+</style>
+</head>
+<body>
+<h2>Ctrl+Aid Demo Video — Browser Recorder</h2>
+<div class="container" id="container">
+    <img class="webp-player active" id="clip1" src="landing_page_demo.webp">
+    <img class="webp-player" id="clip2" src="dashboard_alerts_demo.webp">
+    <img class="webp-player" id="clip3" src="contacts_ai_demo.webp">
+</div>
+<div class="controls">
+    <button class="record-btn" id="recordBtn" onclick="toggleRecord()">🔴 Start Recording</button>
+    <button class="download-btn" id="downloadBtn" onclick="downloadVideo()" style="display:none">💾 Download MP4</button>
+</div>
+<div class="status" id="status">Click "Start Recording" then watch all 3 clips play through. Click "Stop" when done.</div>
+<div class="instructions">
+    <strong>Instructions:</strong><br>
+    1. Click "Start Recording" — the browser will capture a video of the container above<br>
+    2. The 3 demo clips will auto-play in sequence (Landing → Dashboard → Contacts+AI)<br>
+    3. When all clips finish, click "Stop Recording"<br>
+    4. Download the MP4 and upload to YouTube/Google Drive for your submission<br><br>
+    <strong>Alternative:</strong> Use Windows Game Bar (Win+G) or OBS to screen-record this page.
+</div>
+
+<script>
+let mediaRecorder, chunks = [], recording = false;
+const container = document.getElementById('container');
+const clips = [document.getElementById('clip1'), document.getElementById('clip2'), document.getElementById('clip3')];
+
+async function toggleRecord() {
+    const btn = document.getElementById('recordBtn');
+    if (!recording) {
+        // Start recording
+        try {
+            const stream = container.captureStream ? container.captureStream(10) : container.mozCaptureStream(10);
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+            chunks = [];
+            mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+            mediaRecorder.onstop = () => {
+                document.getElementById('downloadBtn').style.display = 'inline-block';
+                document.getElementById('status').textContent = '✅ Recording complete! Click Download.';
+            };
+            mediaRecorder.start(100);
+            recording = true;
+            btn.textContent = '⏹ Stop Recording';
+            btn.classList.add('recording');
+            document.getElementById('status').textContent = '🔴 Recording... Playing clips in sequence.';
+            
+            // Auto-play clips in sequence
+            await playClip(0, 12000);
+            await playClip(1, 15000);
+            await playClip(2, 20000);
+            document.getElementById('status').textContent = 'All clips played. Click Stop Recording.';
+        } catch(err) {
+            alert('Recording failed: ' + err.message + '\n\nUse Windows Game Bar (Win+G) instead.');
+        }
+    } else {
+        mediaRecorder.stop();
+        recording = false;
+        btn.textContent = '🔴 Start Recording';
+        btn.classList.remove('recording');
+    }
+}
+
+function playClip(index, duration) {
+    return new Promise(resolve => {
+        clips.forEach((c, i) => c.classList.toggle('active', i === index));
+        setTimeout(resolve, duration);
+    });
+}
+
+function downloadVideo() {
+    const blob = new Blob(chunks, { type: 'video/webm' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Ctrl_Aid_Demo_Video.webm';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
