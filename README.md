@@ -242,7 +242,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 👥 Team
 
-Built with ❤️ for the **AI for Civic Innovation Hackathon 2026** by Code for Pakistan.
+Built with ❤️ for the **AI for Civic Innovation Hackathon 2026** by Code for Pakistan. Special thanks to Fatik Imran, Kaleem Akhtar and Obaidullah for being supporting teammates.
 
 ---
 
